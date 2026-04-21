@@ -1,0 +1,174 @@
+# Dorm Room Chore Rotation Program
+
+# Hardcoded chore list (parallel lists)
+chores = ["Sweeping / Mopping", "Dishwashing", "Taking Out Trash", "Cleaning Bathroom", "Buying Groceries"]
+frequencies = ["Daily", "After meals", "Every other day", "Weekly", "Weekly"]
+
+# Get room monitor name (with validation - must have letters)
+monitor_name = ""
+while True:
+    monitor_name = input("Room monitor name: ").strip()
+    if monitor_name == "":
+        print("Please try again.")
+        continue
+    
+    has_letter = False
+    for char in monitor_name:
+        if char.isalpha():
+            has_letter = True
+            break
+    
+    if has_letter:
+        break
+    else:
+        print("Please try again.")
+
+# Get room number (with validation - must have digits only, no empty)
+room_number = ""
+while True:
+    room_number = input("Room number: ").strip()
+    if room_number == "":
+        print("Please try again.")
+        continue
+    
+    has_digit = False
+    all_digits = True
+    for char in room_number:
+        if char.isdigit():
+            has_digit = True
+        else:
+            all_digits = False
+    
+    if has_digit and all_digits:
+        break
+    else:
+        print("Please try again.")
+
+# Display chore list using loop
+print()
+print("==========================================")
+print("   DORM ROOM -- CHORE LIST")
+print("==========================================")
+for i in range(len(chores)):
+    chore_num = i + 1
+    print(str(chore_num) + ". " + chores[i] + "    [" + frequencies[i] + "]")
+print("==========================================")
+print()
+
+# Variables to track chores
+assigned_chores = []
+completed_count = 0
+assigned_count = 0
+
+# Get 4 chore assignments
+for assignment_num in range(1, 5):
+    print("--- CHORE " + str(assignment_num) + " ---")
+    
+    valid_choice = False
+    chore_choice = -1
+    
+    while not valid_choice:
+        user_input = input("Chore number (0 to skip): ").strip()
+        if user_input == "":
+            print("Please try again.")
+            continue
+        
+        is_number = True
+        for char in user_input:
+            if not char.isdigit():
+                is_number = False
+                break
+        
+        if not is_number:
+            print("Please try again.")
+            continue
+        
+        chore_choice = int(user_input)
+        if chore_choice == 0 or (chore_choice >= 1 and chore_choice <= 5):
+            valid_choice = True
+        else:
+            print("Please try again.")
+    
+    print()
+    
+    if chore_choice == 0:
+        continue
+    else:
+        assigned_count = assigned_count + 1
+        
+        # Get roommate name (must have letters)
+        roommate_name = ""
+        while True:
+            roommate_name = input("Roommate name: ").strip()
+            if roommate_name == "":
+                print("Please try again.")
+                continue
+            
+            has_letter = False
+            for char in roommate_name:
+                if char.isalpha():
+                    has_letter = True
+                    break
+            
+            if has_letter:
+                break
+            else:
+                print("Please try again.")
+        
+        # Get completion status
+        valid_status = False
+        status = ""
+        while not valid_status:
+            status_input = input("Status (done/not done): ").strip()
+            if status_input == "done" or status_input == "not done":
+                status = status_input
+                valid_status = True
+            else:
+                print("Please try again.")
+        
+        if status == "done":
+            completed_count = completed_count + 1
+        
+        assigned_chores.append([chore_choice, roommate_name, status])
+
+# Calculate completion rate
+if assigned_count > 0:
+    completion_rate = (completed_count * 100) // assigned_count
+else:
+    completion_rate = 0
+
+# Determine room status
+if completion_rate == 100:
+    room_status = "ROOM IS SPOTLESS!"
+elif completion_rate >= 50:
+    room_status = "ALMOST THERE!"
+else:
+    room_status = "NEEDS CATCHING UP!"
+
+# Print chore report
+print("=============================================")
+print("     ROOM " + room_number + " -- WEEKLY CHORE REPORT")
+print("=============================================")
+print("Room Monitor : " + monitor_name)
+print("---------------------------------------------")
+
+# Display each assigned chore
+for seq_num in range(len(assigned_chores)):
+    chore_data = assigned_chores[seq_num]
+    chore_num = chore_data[0]
+    roommate = chore_data[1]
+    chore_status = chore_data[2]
+    
+    chore_name = chores[chore_num - 1]
+    chore_freq = frequencies[chore_num - 1]
+    
+    print("[" + str(seq_num + 1) + "] " + chore_name + "    [" + chore_freq + "]")
+    print("    Roommate : " + roommate)
+    print("    Status   : " + chore_status)
+    print()
+
+print("---------------------------------------------")
+print("Completed      : " + str(completed_count) + " out of " + str(assigned_count) + " assigned")
+print("Completion Rate: " + str(completion_rate) + "%")
+print("Room Status    : " + room_status)
+print("=============================================")
